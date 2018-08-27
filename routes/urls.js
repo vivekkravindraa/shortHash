@@ -48,9 +48,9 @@ router.post('/',(req,res) => {
 
 router.put('/:id',(req,res) => {
     let id = req.params.id;
-    let body = req.body;
+    let body = _.pick(req.body,['title','tags']);
     
-    Url.findOneAndUpdate(id, body)
+    Url.findByIdAndUpdate(id, {$set: body}, {new: true})
     .then((url) => {
         res.send({
             url,
@@ -65,7 +65,7 @@ router.put('/:id',(req,res) => {
 router.delete('/:id',(req,res) => {
     let id = req.params.id;
     
-    Url.findOneAndRemove(id)
+    Url.findByIdAndRemove(id)
     .then((url) => {
         res.send({
             url,
