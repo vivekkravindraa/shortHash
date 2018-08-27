@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const sh = require('shorthash');
+const shortHash = require('shorthash');
 
 const Schema = mongoose.Schema;
 
@@ -20,7 +20,7 @@ const urlSchema = new Schema({
 urlSchema.pre('save', function(next) {
     if(!this.hashed_url) {
         console.log(this.original_url);
-        this.hashed_url = sh.unique(`${this.original_url}`);
+        this.hashed_url = shortHash.unique(`${this.original_url}`);
     }
     next();
 })

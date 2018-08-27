@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const _ = require('lodash');
 
-const sh = require('shorthash');
+const shortHash = require('shorthash');
 
 const { Url } = require('./models/url');
 const mongoose = require('./config/db');
