@@ -23,15 +23,12 @@ router.get('/:hash',(req,res) => {
 
     Url.findOne({hashed_url: hash})
     .then((url) => {
-        res.send({
-            url,
-            notice: 'Displaying one url record'
-        });
+        res.redirect(`${url.original_url}`);
     })
     .catch((err) => {
         res.send(err);
-    });
-});
+    })
+})
 
 router.post('/',(req,res) => {
     let body = _.pick(req.body, ['title','original_url','tags']);

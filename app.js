@@ -20,7 +20,7 @@ app.use('/url',urlRouter);
 
 app.get('/',(req,res) => {
     res.send({
-        msg: "Welcome to the page .."
+        msg: "Welcome to the page.."
     })
 })
 
