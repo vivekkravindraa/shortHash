@@ -18,6 +18,21 @@ router.get('/',(req,res) => {
     });
 });
 
+router.get('/:id',(req,res) => {
+    let id = req.params.id;
+    
+    Url.findById(id)
+    .then((url) => {
+        res.send({
+            url,
+            notice: 'Displaying one of the urls'
+        });
+    })
+    .catch((err) => {
+        res.send(err);
+    });
+});
+
 router.get('/tags', (req,res) => {
     let names = req.query.names;
     
@@ -59,7 +74,7 @@ router.get('/:hash',(req,res) => {
 });
 
 router.post('/',(req,res) => {
-    let body = _.pick(req.body, ['title','original_url','tags']);
+    let body = _.pick(req.body, ['title','original_url','tags','clicks']);
     let url = new Url(body);
     
     url.save()
@@ -76,7 +91,7 @@ router.post('/',(req,res) => {
 
 router.put('/:id',(req,res) => {
     let id = req.params.id;
-    let body = _.pick(req.body,['title','tags']);
+    let body = _.pick(req.body,['title','tags','clicks']);
     
     Url.findByIdAndUpdate(id, {$set: body}, {new: true})
     .then((url) => {

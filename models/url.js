@@ -23,23 +23,38 @@ const urlSchema = new Schema({
     tags: [ String ],
     hashed_url: {
         type: String
-    }
+    },
+    clicks: [
+        {
+            dateTime: {
+                type: Date,
+                Default: Date.now
+            },
+            ipAddress: {
+                type: String
+            },
+            browserName: {
+                type: String
+            },
+            osType: {
+                type: String
+            },
+            deviceType: {
+                type: String
+            }
+        }
+    ]
 })
 
 urlSchema.pre('save', function(next) {
     if(!this.hashed_url) {
         this.hashed_url = shortHash.unique(`${this.original_url}`);
     }
+    if(!this.clicks) {
+        this.clicks = [];
+    }
     next();
 })
-
-// urlSchema.pre('save', function(next) {
-//     let count = 0;
-//     if(!this.pageCount) {
-//         this.pageCount = count++;
-//     }
-//     next();
-// })
 
 const Url = mongoose.model('Url', urlSchema);
 

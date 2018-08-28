@@ -2,9 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const _ = require('lodash');
-const validator = require('validator');
 
+const validator = require('validator');
 const shortHash = require('shorthash');
+const useragent = require('express-useragent');
 
 const { Url } = require('./models/url');
 const mongoose = require('./config/db');
@@ -19,10 +20,12 @@ app.use(morgan('short'));
 
 app.use('/urls',urlRouter);
 
+app.use(useragent.express());
+
 app.get('/',(req,res) => {
     res.send({
-        msg: "Welcome to the page.."
-    })
+        message: "Welcome to the page..."
+    });
 })
 
 app.listen(port, () => {
