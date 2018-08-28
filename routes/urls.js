@@ -18,6 +18,34 @@ router.get('/',(req,res) => {
     });
 });
 
+router.get('/tags', (req,res) => {
+    let names = req.query.names;
+    
+    let values = names.split(',');
+
+    Url.find({tags: {"$all": values }})
+    .then((urls) => {
+        res.send(urls);
+    })
+    .catch((err) => {
+        res.send(err);
+    })
+});
+
+router.get('/tags/:name',(req,res) => {
+    let name = req.params.name;
+
+    Url.find({ tags: name})
+    .then((urls) => {
+        res.send({
+            urls
+        })
+    })
+    .catch((err) => {
+        res.send(err);
+    })
+});
+
 router.get('/:hash',(req,res) => {
     let hash = req.params.hash;
 
@@ -28,7 +56,7 @@ router.get('/:hash',(req,res) => {
     .catch((err) => {
         res.send(err);
     })
-})
+});
 
 router.post('/',(req,res) => {
     let body = _.pick(req.body, ['title','original_url','tags']);
@@ -44,7 +72,7 @@ router.post('/',(req,res) => {
     .catch((err) => {
         res.send(err);
     })
-})
+});
 
 router.put('/:id',(req,res) => {
     let id = req.params.id;
@@ -60,7 +88,7 @@ router.put('/:id',(req,res) => {
     .catch((err) => {
         res.send(err);
     })
-})
+});
 
 router.delete('/:id',(req,res) => {
     let id = req.params.id;
@@ -75,7 +103,7 @@ router.delete('/:id',(req,res) => {
     .catch((err) => {
         res.send(err);
     })
-})
+});
 
 module.exports = {
     urlRouter: router

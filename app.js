@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const _ = require('lodash');
+const validator = require('validator');
 
 const shortHash = require('shorthash');
 
@@ -16,7 +17,7 @@ app.use(bodyParser.json());
 
 app.use(morgan('short'));
 
-app.use('/url',urlRouter);
+app.use('/urls',urlRouter);
 
 app.get('/',(req,res) => {
     res.send({
