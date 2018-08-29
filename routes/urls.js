@@ -73,6 +73,23 @@ router.get('/:hash',(req,res) => {
     })
 });
 
+router.get('/hashed_url/:hash',(req,res) => {
+    let hash = req.params.hash;
+    let body = {
+        ipAddress: req.ip,
+        browser: req.useragent.browser,
+        osType: req.useragent.os,
+        deviceType: req.useragent.isDesktop ? 'Desktop' : 'Mobile'
+    }
+    Url.findOneAndUpdate({hashed_url: hash}, {$push: {clicks: body }}, {new: true})
+    .then((url) => {
+        res.send(url);
+    })
+    .catch((err) => {
+        res.send(err);
+    })
+})
+
 router.post('/',(req,res) => {
     let body = _.pick(req.body, ['title','original_url','tags','clicks']);
     let url = new Url(body);

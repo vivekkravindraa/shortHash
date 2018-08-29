@@ -28,12 +28,12 @@ const urlSchema = new Schema({
         {
             dateTime: {
                 type: Date,
-                Default: Date.now
+                default: Date.now
             },
             ipAddress: {
                 type: String
             },
-            browserName: {
+            browser: {
                 type: String
             },
             osType: {
@@ -49,9 +49,6 @@ const urlSchema = new Schema({
 urlSchema.pre('save', function(next) {
     if(!this.hashed_url) {
         this.hashed_url = shortHash.unique(`${this.original_url}`);
-    }
-    if(!this.clicks) {
-        this.clicks = [];
     }
     next();
 })

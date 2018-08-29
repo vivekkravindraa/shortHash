@@ -14,18 +14,16 @@ const { urlRouter } = require('./routes/urls');
 const app = express();
 const port = 3000;
 
+app.use(useragent.express());
+
 app.use(bodyParser.json());
 
 app.use(morgan('short'));
 
 app.use('/urls',urlRouter);
 
-app.use(useragent.express());
-
 app.get('/',(req,res) => {
-    res.send({
-        message: "Welcome to the page..."
-    });
+    res.send(req.useragent);
 })
 
 app.listen(port, () => {
