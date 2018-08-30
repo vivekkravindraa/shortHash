@@ -21,15 +21,17 @@ app.use(useragent.express());
 
 app.use(bodyParser.json());
 
+// ACCESS LOGGER MIDDLEWARE
 // create a write stream (in append mode)
 let accessLogStream = fs.createWriteStream(path.join('./logs', 'access.log'), {flags: 'a'});
+
 // setup the logger
-// app.use(morgan('combined', {stream: accessLogStream}));
+// app.use(morgan('combined', {stream: accessLogStream})); // OR
 app.use(morgan(function (tokens, req, res) {
     return [`Started ${tokens.method(req, res)} ${tokens.url(req, res)} for ${req.ip} at ${new Date()} completed ${tokens.status(req, res)} in ${tokens['response-time'](req, res)} ms \n`]
 }, {stream: accessLogStream}));
 
-// CUSTOM LOGGING MIDDLEWARE
+// CUSTOM LOGGER MIDDLEWARE
 // Started :method :url for :ip_address at :datetime Completed :status in :response-time
 app.use(morgan(function (tokens, req, res) {
     return [`Started ${tokens.method(req, res)} ${tokens.url(req, res)} for ${req.ip} at ${new Date()} completed ${tokens.status(req, res)} in ${tokens['response-time'](req, res)} ms`]
