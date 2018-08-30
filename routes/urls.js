@@ -18,6 +18,20 @@ router.get('/',(req,res) => {
     });
 });
 
+router.get('/tags', (req,res) => {
+    let names = req.query.names;
+    
+    let values = names.split(',');
+
+    Url.find({tags: {"$all": values }})
+    .then((urls) => {
+        res.send(urls);
+    })
+    .catch((err) => {
+        res.send(err);
+    })
+});
+
 router.get('/:id',(req,res) => {
     let id = req.params.id;
     
@@ -31,20 +45,6 @@ router.get('/:id',(req,res) => {
     .catch((err) => {
         res.send(err);
     });
-});
-
-router.get('/tags', (req,res) => {
-    let names = req.query.names;
-    
-    let values = names.split(',');
-
-    Url.find({tags: {"$all": values }})
-    .then((urls) => {
-        res.send(urls);
-    })
-    .catch((err) => {
-        res.send(err);
-    })
 });
 
 router.get('/tags/:name',(req,res) => {
