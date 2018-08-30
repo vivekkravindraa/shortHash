@@ -33,7 +33,7 @@ const urlSchema = new Schema({
             ipAddress: {
                 type: String
             },
-            browser: {
+            browserName: {
                 type: String
             },
             osType: {
@@ -46,6 +46,7 @@ const urlSchema = new Schema({
     ]
 })
 
+// Middleware used to create the hashed_url of the original_url before saving it to the db
 urlSchema.pre('save', function(next) {
     if(!this.hashed_url) {
         this.hashed_url = shortHash.unique(`${this.original_url}`);
