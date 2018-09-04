@@ -15,6 +15,7 @@
     "express-useragent": "^1.0.12",
     "fs": "0.0.1-security",
     "fs-extra": "^7.0.0",
+    "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.10",
     "method-override": "^3.0.0",
     "mongodb": "^3.1.4",

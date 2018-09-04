@@ -125,5 +125,5 @@ router.delete('/:id',(req,res) => {
 });
 
 module.exports = {
-    urlRouter: router
+    urlsRouter: router
 }

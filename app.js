@@ -11,8 +11,11 @@ const morgan = require('morgan');
 const path = require('path');
 
 const { Url } = require('./models/url');
+const { User } = require('./models/user');
 const mongoose = require('./config/db');
-const { urlRouter } = require('./routes/urls');
+
+const { urlsRouter } = require('./routes/urls');
+const { usersRouter } = require('./routes/users');
 
 const app = express();
 const port = 3000;
@@ -37,7 +40,8 @@ app.use(morgan(function (tokens, req, res) {
     return [`Started ${tokens.method(req, res)} ${tokens.url(req, res)} for ${req.ip} at ${new Date()} completed ${tokens.status(req, res)} in ${tokens['response-time'](req, res)} ms`]
 }));
 
-app.use('/urls',urlRouter);
+app.use('/urls',urlsRouter);
+app.use('/users',usersRouter);
 
 app.get('/',(req,res) => {
     res.send(req.useragent);
