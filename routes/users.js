@@ -1,6 +1,8 @@
 const express = require('express');
-const { User } = require('../models/user');
 const mongoose = require('mongoose');
+
+const { User } = require('../models/user');
+const { authenticateUser } = require('../middlewares/authentication');
 const _ = require('lodash');
 
 const router = express.Router();
@@ -29,6 +31,10 @@ router.post('/',(req,res) => {
     .catch((err) => {
         res.status(404).send(err);
     })
+})
+
+router.get('/profile', authenticateUser, (req,res) => {
+    res.send(req.locals.user);
 })
 
 module.exports = {

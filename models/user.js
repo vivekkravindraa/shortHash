@@ -54,6 +54,18 @@ const userSchema = new Schema({
     ]
 })
 
+userSchema.statics.findByToken = function(token) {
+    let User = this;
+    let tokenData;
+    try {
+        tokenData = jwt.verify(token,'supersecret');
+        // Decoding // jwt.verify(TOKEN, SIGNATURE);
+    } catch(e) {
+        return Promise.reject(e);
+    }
+    return User.findOne({'_id': tokenData._id, 'tokens.token': token});
+}
+
 userSchema.methods.toJSON = function() {
     return _.pick(this, ['_id','username','email','mobile']);
 }
@@ -66,7 +78,7 @@ userSchema.methods.generateToken = function() {
     let generatedTokenInfo = {
         access: 'auth',
         token: jwt.sign(tokenData, 'supersecret')
-        // jwt.sign(USER_DATA, SIGNATURE)
+        // Encoding // jwt.sign(USER_DATA, SIGNATURE)
     }
 
     this.tokens.push(generatedTokenInfo);
