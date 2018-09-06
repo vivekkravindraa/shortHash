@@ -43,7 +43,11 @@ const urlSchema = new Schema({
                 type: String
             }
         }
-    ]
+    ],
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
 })
 
 // Middleware used to create the hashed_url of the original_url before saving it to the db

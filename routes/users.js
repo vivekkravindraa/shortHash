@@ -20,7 +20,7 @@ router.get('/',(req,res) => {
 router.post('/',(req,res) => {
     let body = _.pick(req.body, ['username','email','password','mobile']);
     let user = new User(body);
-
+    
     user.save()
     .then((user) => {
         return user.generateToken();

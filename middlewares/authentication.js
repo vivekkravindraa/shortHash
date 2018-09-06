@@ -8,7 +8,7 @@ let authenticateUser = ((req,res,next) => {
             user,
             token
         }
-        next()
+        next();
     })
     .catch((err)=>{
         res.status(401).send(err);

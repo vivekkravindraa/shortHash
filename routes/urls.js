@@ -1,11 +1,12 @@
 const express = require('express');
 const { Url } = require('../models/url');
+const { authenticateUser } = require('../middlewares/authentication');
 const mongoose = require('../config/db');
 const _ = require('lodash');
 
 const router = express.Router();
 
-router.get('/',(req,res) => {
+router.get('/', authenticateUser, (req,res) => {
     Url.find()
     .then((urls) => {
         res.send({
@@ -18,7 +19,7 @@ router.get('/',(req,res) => {
     });
 });
 
-router.get('/tags', (req,res) => {
+router.get('/tags', authenticateUser, (req,res) => {
     let names = req.query.names;
     
     let values = names.split(',');
@@ -33,7 +34,7 @@ router.get('/tags', (req,res) => {
 });
 
 // Response is redirected to original_url
-router.get('/:hash',(req,res) => {
+router.get('/:hash', authenticateUser, (req,res) => {
     let hash = req.params.hash;
 
     Url.findOne({hashed_url: hash})
@@ -45,7 +46,7 @@ router.get('/:hash',(req,res) => {
     })
 });
 
-router.get('/tags/:name',(req,res) => {
+router.get('/tags/:name', authenticateUser, (req,res) => {
     let name = req.params.name;
 
     Url.find({ tags: name})
@@ -60,7 +61,7 @@ router.get('/tags/:name',(req,res) => {
 });
 
 // Mongo-db's array update method: $PUSH
-router.get('/hashed_url/:hash',(req,res) => {
+router.get('/hashed_url/:hash', authenticateUser, (req,res) => {
     let hash = req.params.hash;
     let body = {
         ipAddress: req.ip,
@@ -77,9 +78,10 @@ router.get('/hashed_url/:hash',(req,res) => {
     })
 })
 
-router.post('/',(req,res) => {
+router.post('/', authenticateUser, (req,res) => {
     let body = _.pick(req.body, ['title','original_url','tags','clicks']);
     let url = new Url(body);
+    url.user = req.locals.user._id;
     
     url.save()
     .then((url) => {
@@ -93,7 +95,7 @@ router.post('/',(req,res) => {
     })
 });
 
-router.put('/:id',(req,res) => {
+router.put('/:id', authenticateUser, (req,res) => {
     let id = req.params.id;
     let body = _.pick(req.body,['title','tags','clicks']);
     
@@ -109,7 +111,7 @@ router.put('/:id',(req,res) => {
     })
 });
 
-router.delete('/:id',(req,res) => {
+router.delete('/:id', authenticateUser, (req,res) => {
     let id = req.params.id;
     
     Url.findByIdAndRemove(id)
