@@ -33,6 +33,30 @@ router.post('/',(req,res) => {
     })
 })
 
+router.post('/login',(req,res) => {
+    let body = _.pick(req.body, ['email','password']);
+    User.findByEmailAndPassword(body.email, body.password)
+    .then((user) => {
+        return user.generateToken();
+    })
+    .then((token) => {
+        res.header('x-auth',token).send();
+    })
+    .catch((err) => {
+        res.send(err);
+    })
+})
+
+router.delete('/logout',authenticateUser, (req,res) => {
+    req.locals.user.deleteToken(req.locals.token)
+    .then(() => {
+        res.send();
+    })
+    .catch((err) => {
+        res.send(err);
+    })
+})
+
 router.get('/profile', authenticateUser, (req,res) => {
     res.send(req.locals.user);
 })

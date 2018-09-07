@@ -83,6 +83,24 @@ userSchema.statics.findByToken = function(token) {
     return User.findOne({'_id': tokenData._id, 'tokens.token': token});
 }
 
+userSchema.statics.findByEmailAndPassword = function(email, password) {
+    let User = this;
+    return User.findOne({email: email})
+    .then((user) => {
+        if(!user) { // (!user) ----> null ----> if email is incorrect
+            return Promise.reject('invalid email');
+        } 
+        return bcrypt.compare(password, user.password)
+        .then((res) => {
+            if(res) {
+                return user;
+            } else {
+                return Promise.reject('invalid password');  // if password is incorrect
+            }
+        })
+    })
+}
+
 userSchema.methods.toJSON = function() {
     return _.pick(this, ['_id','username','email','mobile']);
 }
@@ -102,6 +120,15 @@ userSchema.methods.generateToken = function() {
     return this.save().then((user) => {
         return generatedTokenInfo.token;
     })
+}
+
+userSchema.methods.deleteToken = function(userToken) {
+    let user = this;
+    let findToken = user.tokens.find((token) => {
+        return token.token == userToken;
+    })
+    user.tokens.remove(findToken._id)
+    return user.save()
 }
 
 const User = mongoose.model('User',userSchema);
