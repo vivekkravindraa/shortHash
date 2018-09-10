@@ -10,7 +10,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     username: {
         type: String,
-        trim: true, // removes the begginning and trailing white spaces
+        trim: true,             // removes the beginning and trailing white spaces
         required: true,
         unique: true
     },
