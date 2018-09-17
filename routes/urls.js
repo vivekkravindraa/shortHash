@@ -1,7 +1,7 @@
 const express = require('express');
+
 const { Url } = require('../models/url');
 const { authenticateUser } = require('../middlewares/authentication');
-const mongoose = require('../config/db');
 const _ = require('lodash');
 
 const router = express.Router();
@@ -12,6 +12,21 @@ router.get('/', authenticateUser, (req,res) => {
         res.send({
             urls,
             notice: 'Displaying all the urls'
+        });
+    })
+    .catch((err) => {
+        res.send(err);
+    });
+});
+
+router.get('/:id', authenticateUser, (req,res) => {
+    let id = req.params.id;
+    
+    Url.findById(id)
+    .then((urls) => {
+        res.send({
+            urls,
+            notice: 'Displaying the particular url'
         });
     })
     .catch((err) => {
@@ -33,19 +48,6 @@ router.get('/tags', authenticateUser, (req,res) => {
     })
 });
 
-// Response is redirected to original_url
-router.get('/:hash', authenticateUser, (req,res) => {
-    let hash = req.params.hash;
-
-    Url.findOne({hashed_url: hash})
-    .then((url) => {
-        res.redirect(`${url.original_url}`);
-    })
-    .catch((err) => {
-        res.send(err);
-    })
-});
-
 router.get('/tags/:name', authenticateUser, (req,res) => {
     let name = req.params.name;
 
@@ -60,8 +62,23 @@ router.get('/tags/:name', authenticateUser, (req,res) => {
     })
 });
 
+// authenticateUser middleware is not required, should be treated as publicly accessible
+
+// Response is redirected to original_url
+// router.get('hashed_url/:hash', (req,res) => {
+//     let hash = req.params.hash;
+
+//     Url.findOne({hashed_url: hash})
+//     .then((url) => {
+//         res.redirect(`${url.original_url}`);
+//     })
+//     .catch((err) => {
+//         res.send(err);
+//     })
+// });
+
 // Mongo-db's array update method: $PUSH
-router.get('/hashed_url/:hash', authenticateUser, (req,res) => {
+router.get('/hashed_url/:hash', (req,res) => {
     let hash = req.params.hash;
     let body = {
         ipAddress: req.ip,

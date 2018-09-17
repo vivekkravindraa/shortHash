@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
-const bcrypt = require('bcryptjs');
 
 const Schema = mongoose.Schema;
 
@@ -122,14 +122,16 @@ userSchema.methods.generateToken = function() {
     })
 }
 
-userSchema.methods.deleteToken = function(userToken) {
-    let user = this;
-    let findToken = user.tokens.find((token) => {
-        return token.token == userToken;
-    })
-    user.tokens.remove(findToken._id)
-    return user.save()
-}
+// userSchema.methods.deleteToken = function(userToken) {
+//     let user = this;
+//     let findToken = user.tokens.find((token) => {
+//         return token.token == userToken;
+//     })
+//     user.tokens.remove(findToken._id)
+//     return user.save()
+// }
+
+// TODO: $PULL
 
 const User = mongoose.model('User',userSchema);
 

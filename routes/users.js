@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 
 const { User } = require('../models/user');
 const { authenticateUser } = require('../middlewares/authentication');
@@ -33,7 +32,7 @@ router.post('/',(req,res) => {
     })
 })
 
-router.post('/login',(req,res) => {
+router.post('/login', authenticateUser, (req,res) => {
     let body = _.pick(req.body, ['email','password']);
     User.findByEmailAndPassword(body.email, body.password)
     .then((user) => {
@@ -47,15 +46,20 @@ router.post('/login',(req,res) => {
     })
 })
 
-router.delete('/logout',authenticateUser, (req,res) => {
-    req.locals.user.deleteToken(req.locals.token)
-    .then(() => {
-        res.send();
-    })
-    .catch((err) => {
-        res.send(err);
-    })
-})
+// router.delete('/logout',authenticateUser, (req,res) => {
+//     req.locals.user.deleteToken(req.locals.token)
+//     .then(() => {
+//         res.send();
+//     })
+//     .catch((err) => {
+//         res.send(err);
+//     })
+// })
+
+// TODO: Deleting 'token' using MongoDB's Array Update Method: $PULL
+// router.delete('/logout',authenticateUser, (req,res) => {
+//
+// })
 
 router.get('/profile', authenticateUser, (req,res) => {
     res.send(req.locals.user);
